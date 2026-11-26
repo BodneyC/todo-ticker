@@ -87,7 +87,11 @@ atomically, preserving permissions and line endings.
 ## Development
 
 ```sh
-poetry run pytest           # tests + coverage (>= 90%)
-poetry run ruff check . && poetry run ruff format .
-poetry run pyright
+poetry install              # includes dev tools
+poetry run poe test         # tests + coverage (>= 90%); extra args go to pytest, e.g. -k parser
+poetry run poe lint         # ruff check
+poetry run poe fix          # ruff --fix + format
+poetry run poe typecheck    # pyright (strict)
+poetry run poe check        # everything CI runs
+poetry run poe              # list tasks
 ```

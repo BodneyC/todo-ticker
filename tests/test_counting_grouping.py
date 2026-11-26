@@ -9,7 +9,8 @@ from todo_ticker.models import Entry
 from todo_ticker.parser import scan_text
 from todo_ticker.scanning import entries_for
 
-ROOT = Path("/proj")
+# Resolved so it matches what id_key sees (on Windows this adds a drive letter).
+ROOT = Path("/proj").resolve()
 
 
 def _entries(path: str, text: str) -> list[Entry]:

@@ -144,7 +144,8 @@ def test_write_preserves_mode_and_crlf(project: Path) -> None:
     code, out = invoke("check", "crlf", "--no-color")
     assert code == 0, out
     assert script.read_bytes() == b"#!/bin/sh\r\necho hi  # - [x] crlf\r\n"
-    assert stat.S_IMODE(script.stat().st_mode) == 0o755
+    if os.name != "nt":  # Windows has no Unix permission bits to preserve
+        assert stat.S_IMODE(script.stat().st_mode) == 0o755
     assert not [p for p in project.iterdir() if p.name.endswith(".tick")]
 
 

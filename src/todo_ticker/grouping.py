@@ -20,10 +20,12 @@ KINDS: tuple[Kind, ...] = ("box", "todo", "fixme")
 
 
 def display_path(path: Path, cwd: Path) -> str:
+    """``path`` relative to ``cwd``, always with forward slashes (matching ids
+    and ``path:line`` refs, which Windows accepts too)."""
     try:
-        return os.path.relpath(path, cwd)
+        return Path(os.path.relpath(path, cwd)).as_posix()
     except ValueError:  # pragma: no cover - different drive on Windows
-        return str(path)
+        return path.as_posix()
 
 
 def group_key(entry: Entry, group: Group, cwd: Path) -> str:
