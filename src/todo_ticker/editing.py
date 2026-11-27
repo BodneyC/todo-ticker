@@ -28,7 +28,9 @@ def set_line_state(line: str, todo: Todo, checked: bool) -> str:
     if todo.col > len(line):
         raise EditError(f"line {todo.line}: line is shorter than expected")
     spacer = "" if todo.col == 0 or line[todo.col - 1] in " \t" else " "
-    return f"{line[: todo.col]}{spacer}[{mark}] {line[todo.col :]}"
+    rest = line[todo.col :]
+    box = f"[{mark}] " if rest else f"[{mark}]"
+    return f"{line[: todo.col]}{spacer}{box}{rest}"
 
 
 def apply_states(text: str, changes: Iterable[tuple[Todo, bool]]) -> str:

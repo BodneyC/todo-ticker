@@ -20,10 +20,10 @@ from .models import Todo
 # Decoration that may precede a checkbox inside a comment body: repeated
 # markers (``%%``, ``##``, ``///``, ``//!``) and block-comment gutters (`` * ``).
 CHECKBOX_RE = re.compile(r"^[\s#%/;!*]*?[-*+][ \t]+\[(?P<mark>[ xX])\](?:[ \t]+(?P<text>.*))?$")
-KEYWORD_RE = re.compile(
-    r"\b(?P<kw>TODO|FIXME)\b(?:\([^)]*\))?:[ \t]*"
-    r"(?:\[(?P<mark>[ xX])\][ \t]*)?(?P<text>.*)$"
-)
+KEYWORD_RE = re.compile(r"\b(?P<kw>TODO|FIXME)\b(?:\([^)]*\))?:[ \t]*" r"(?:\[(?P<mark>[ xX])\][ \t]*)?(?P<text>.*)$")
+
+# Text given to keyword todos with nothing after them, e.g. a bare ``TODO:``.
+NO_CONTEXT = "[No context]"
 
 Segment = tuple[int, int]
 BlockState = tuple[str, str] | None
@@ -111,9 +111,7 @@ def match_body(line: str, start: int, end: int, lineno: int) -> Todo | None:
     kw = KEYWORD_RE.search(body)
     if kw is None:
         return None
-    text = kw.group("text").strip()
-    if not text:
-        return None
+    text = kw.group("text").strip() or NO_CONTEXT
     mark = kw.group("mark")
     return Todo(
         line=lineno,

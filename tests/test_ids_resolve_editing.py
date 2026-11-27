@@ -118,6 +118,8 @@ def _one(line: str) -> Todo:
         ("# TODO:a", True, "# TODO: [x] a"),
         ("# TODO: [ ] a", True, "# TODO: [x] a"),
         ("x()  # FIXME(me): a", True, "x()  # FIXME(me): [x] a"),
+        ("# TODO:", True, "# TODO: [x]"),
+        ("# TODO:  ", False, "# TODO:  [ ]"),
     ],
 )
 def test_set_line_state(line: str, checked: bool, expected: str) -> None:

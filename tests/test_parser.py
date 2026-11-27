@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 
 from todo_ticker.languages import C_LIKE, GENERIC, HASH, LUA, MARKUP, RUST, TEX
-from todo_ticker.parser import comment_segments, scan_text
+from todo_ticker.parser import NO_CONTEXT, comment_segments, scan_text
 
 
 def test_checkbox_at_line_start() -> None:
@@ -102,7 +102,6 @@ def test_keyword_insert_column() -> None:
     "line",
     [
         "# - [ ]",
-        "# TODO:",
         "# todo: lower case is not a keyword",
         "# TODOS: not a keyword",
         "# [ ] no bullet",
@@ -113,6 +112,21 @@ def test_keyword_insert_column() -> None:
 )
 def test_non_todos(line: str) -> None:
     assert scan_text(line, HASH) == []
+
+
+@pytest.mark.parametrize(
+    ("line", "keyword", "checked", "has_box"),
+    [
+        ("# TODO:", "TODO", False, False),
+        ("# TODO:   ", "TODO", False, False),
+        ("# FIXME(me):", "FIXME", False, False),
+        ("# TODO: [x]", "TODO", True, True),
+        ("x = 1  # TODO:", "TODO", False, False),
+    ],
+)
+def test_empty_keyword_todo_gets_placeholder(line: str, keyword: str, checked: bool, has_box: bool) -> None:
+    [todo] = scan_text(line, HASH)
+    assert (todo.text, todo.keyword, todo.checked, todo.has_box) == (NO_CONTEXT, keyword, checked, has_box)
 
 
 def test_crlf_line_endings() -> None:

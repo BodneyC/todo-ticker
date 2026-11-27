@@ -1,6 +1,6 @@
 [project]
 name = "todo-ticker"
-version = "0.1.0"
+version = "0.1.1"
 description = "Find, list and tick off markdown-style todos hiding in source code comments"
 readme = "README.md"
 requires-python = ">=3.10"

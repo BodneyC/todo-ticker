@@ -159,7 +159,7 @@ def test_warnings_shown_unless_quiet(project: Path) -> None:
 
 
 def test_version_and_help() -> None:
-    assert "0.1.0" in invoke("--version")[1]
+    assert "0.1.1" in invoke("--version")[1]
     assert "TODO:" in invoke("--help")[1]
 
 
